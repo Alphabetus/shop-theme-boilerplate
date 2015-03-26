@@ -1,0 +1,22 @@
+{% comment %}
+Template: list-collections.html
+===================
+
+Ein Template für die Auflistung von Produktgruppen.
+{% endcomment %}
+
+<section class="list-collections">
+  <div class="page-header">
+    <h2>Produktgruppe</h2>
+  </div>
+
+  <div class="list-collections-items">
+    <ul>
+      {% for collection in collections.all_collections %}
+        <li>
+          {{ collection.title | link_to: collection.url }}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>

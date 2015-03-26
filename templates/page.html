@@ -1,0 +1,29 @@
+{% comment %}
+Template: page.html
+===================
+
+Diese Seite stellt statischen Inhalt dar. Diese Seiten
+werden einfach "pages" genannt
+Versacommerce erstellt die folgenden Seiten automatisch:
+
+  ueber-uns:   About
+  versand:     Shipping info
+  impressum:   Imprint
+  agb:         Terms and conditions
+  datenschutz: Privacy policy
+
+Man kann allerdings alle Seiten anpassen, neue hinzufügen
+und nicht benutzte wieder löschen
+{% endcomment %}
+
+<!-- Page -->
+<article class="page page-{{ page.handle }}">
+
+  <div class="page-header">
+	  <h1>{{ page.title }}</h1>
+  </div>
+
+	{{ page.content }}
+
+</article>
+<!-- End: Page -->

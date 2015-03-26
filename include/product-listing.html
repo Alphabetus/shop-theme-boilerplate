@@ -1,0 +1,45 @@
+{% comment %}
+Partial: product-listing.html
+===================
+
+Hier werden alle Produkte aufgelistet. Es findet zum Beispiel auf der Startseite Verwendung.
+{% endcomment %}
+
+<article class="vc-product vc-product-listing">
+  <a href="{{ product.url }}" class="vc-product-wrapper">
+    {% if product.featured_image_url %}
+      <img src="{{ product.featured_image_url | refit: '300x300' }}" alt="{{ product.title }} | {{ product.subtitle }}" class="vc-product-image">
+    {% else %}
+      <img src="{{ 'missing_image.gif' | asset_url | refit: '300x300' }}" alt="{{ product.title }} | {{ product.subtitle }}" class="vc-product-image">
+    {% endif %}
+
+    <h3 class="vc-product-title">
+      {{ product.title }}
+    </h3>
+
+    {% if product.featured and product.new %}
+      <span class="label label-primary vc-product-label vc-product-label-featured-new">TOP + NEU</span>
+    {% else %}
+      {% if product.featured %}
+      <span class="label label-primary vc-product-label vc-product-label-featured">TOP</span>
+      {% endif %}
+      {% if product.new %}
+        <span class="label label-default vc-product-label vc-product-label-new">NEU</span>
+      {% endif %}
+    {% endif %}
+
+    <p class="vc-product-subtitle">
+      {{ product.subtitle }}
+    </p>
+
+    <p class="vc-product-price">
+      <strong>{{ product.price | money }}</strong>
+
+      {% if product.compare_at_price %}
+        <small class="vc-product-price-old">
+          {{ product.compare_at_price | money }}
+        </small>
+      {% endif %}
+    </p>
+  </a>
+</article>

@@ -1,0 +1,114 @@
+{% comment %}
+Layout: theme.html
+===================
+
+Das ist die Layout-Datei für die Shop-Seiten. Hier wird die grundlegende Struktur der Seite festgelegt.
+Alle anderen Seiten werden in diese eingebaut, sodass jede Seite zum Beispiel denselben
+Header und Footer besitzt.
+
+Dieses Layout MUSS folgenden Codeschnipsel beinhalten:
+{{ content_for_layout }}
+Das ist der Punkt, wo der eigentliche Inhalt der Seite eingefügt wird.
+Außerdem MÜSSEN ebenfalls {{ content_for_header }} im <head>-Bereich und
+{{ content_for_footer }} am Ende des <body>-Tags eingetragen werden.
+{% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>{{ shop.name }}{% if object.title %} – {{ object.title }}{% endif %}</title>
+
+  {% if object.content_meta_description %}
+    <meta name="description" content="{{ object.content_meta_description }}">
+  {% endif %}
+  {% if object.content_meta_keywords %}
+    <meta name="keywords" content="{{ object.content_meta_keywords }}">
+  {% endif %}
+
+  <link rel="shortcut icon" href="{{ 'favicon.ico' | asset_url }}">
+
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css">
+  <link rel="stylesheet" href="{{ 'shop.css' | asset_url }}">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+    <script src="//oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="//oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+  <![endif]-->
+
+  {{ content_for_header }}
+</head>
+<body>
+
+  <!-- Container -->
+  <div class="container">
+
+    <!-- Main Navigation -->
+    <nav class="navbar navbar-{{ settings.navbar_style }}">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+          <span class="sr-only">Navigation umschalten</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="/">{{ shop.name }}</a>
+      </div>
+
+      {% include 'navbar-items' %}
+    </nav>
+    <!-- End: Main Navigation -->
+
+    <!-- Main Content -->
+    <div class="main-content">
+
+      {% comment %}
+      Hier wird der eigentliche Inhalt der Seite eingebunden.
+      {% endcomment %}
+
+      {{ content_for_layout }}
+
+    </div>
+    <!-- End: Main Content -->
+
+    <!-- Footer -->
+    <div class="site-footer well clearfix">
+      <div class="site-footer-primary">
+        {{ settings.footer_text }}
+
+        {% unless linklists.fuss-navigation.links == empty %}
+          <nav class="nav-links">
+            <ul>
+              {% for link in linklists.fuss-navigation.links %}
+                <li>{{ link.title | link_to: link.url }}</li>
+              {% endfor %}
+            </ul>
+          </nav>
+        {% endunless %}
+      </div>
+
+      <div class="site-footer-secondary">
+        © {{ now | date: ' %Y' }} {{ shop.name }}<br>
+        <a href="https://versacommerce.de" class="vc-powered">erstellt mit VersaCommerce</a>
+      </div>
+    </div>
+    <!-- End: Footer -->
+
+  </div>
+  <!-- End: Container -->
+
+
+  <!-- Include jQuery and the Bootstrap scripts -->
+  <script src="//code.jquery.com/jquery-2.0.3.min.js"></script>
+  <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+
+  <!-- Include theme javascript -->
+  {{ 'shop.js' | asset_url | script_tag }}
+
+  {{ content_for_footer }}
+
+</body>
+</html>

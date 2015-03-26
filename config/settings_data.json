@@ -1,0 +1,9 @@
+{
+  "presets": {
+    "default": {
+      "footer_text": "Anpassbarer Fußbereichtext.",
+      "navbar_style": "default"
+    }
+  },
+  "current": "default"
+}

@@ -1,0 +1,38 @@
+{% comment %}
+Template: index.html
+===================
+
+Dies ist die Startseite.
+{% endcomment %}
+
+<!-- Index -->
+<section class="index">
+
+  <!-- Intro -->
+  <div class="jumbotron intro">
+    <h1>Boilerplate Theme</h1>
+    <p class="short">Ein einfaches, responsives Theme für die <a href="http://versacommerce.de">VersaCommerce</a> ecommerce
+      Plattform. Es kann zur Umgestaltung eigener Themes für VersaCommerce benutzt werden. Erstellt mit
+      <a href="http://getbootstrap.com">Bootstrap</a>.</p>
+  </div>
+  <!-- End: Intro -->
+
+  <!-- New Products -->
+  <section id="new-product">
+    <h2>Neue Produkte</h2>
+
+    {% elementrow product in collections.katalog.products limit: 0 cols: 4 %}
+      <!-- Products -->
+      {% if elementrowloop.col_first %}
+      <div class="row">{% endif %}
+        <div class="col-md-3 item-spacing">
+          {% include 'product-listing' %}
+        </div>
+      {% if elementrowloop.col_last or elementrowloop.last %}
+      </div>{% endif %}
+    {% endelementrow %}
+  </section>
+  <!-- End: New Products -->
+
+</section>
+<!-- End: Index -->

@@ -1,0 +1,46 @@
+{% comment %}
+Template: collection.html
+===================
+
+Dieses Template stellt eine Produktgruppe dar.
+{% endcomment %}
+
+<!-- Collection -->
+<section class="collection collection-{{ collection.handle }}">
+
+  <div class="page-header">
+    <h2>{{ collection.title }} <small>({{ collection.all_products_count }})</small></h2>
+  </div>
+
+  {{ collection.description }}
+
+  {% if collection.products_count > 0 %}
+
+    {% paginate collection.products by 12 %}
+
+      {% elementrow product in collection.products limit: 12 cols: 4 %}
+        <!-- Products -->
+        {% if elementrowloop.col_first %}
+        <div class="row">{% endif %}
+          <div class="col-md-3 item-spacing">
+            {% include 'product-listing' %}
+          </div>
+        {% if elementrowloop.col_last or elementrowloop.last %}
+        </div>{% endif %}
+      {% endelementrow %}
+      <!-- End: Products -->
+
+      {% include 'pagination' %}
+    {% endpaginate %}
+
+  {% else %}
+
+    <div class="well well-lg">
+      <span class="glyphicon glyphicon-warning-sign"></span>
+      <strong>Keine Produkte in dieser Produktgruppe gefunden</strong>
+    </div>
+
+  {% endif %}
+
+</section>
+<!-- End: Collection -->

@@ -1,0 +1,45 @@
+<!--
+
+Config: settings.html
+===================
+
+Diese Datei enthält die Eingabelemente für die Themeeinstellungen. Es liegt
+in der Hand des Entwicklers, wie die Einstellungsseite dargestellt wird.
+Werte, die hier gesetzt werden, sind in den Templates über den 'settings'-Hash
+erreichbar.
+
+Es liegt an dir, welche Eingabefelder du für welche Einstellung benutzen willst.
+Du kannst sogar UI-Elemente wie Slider dazu verwenden. Die einzige Vorgabe ist,
+dass das 'name'-Attribut des input-Feldes indentisch mit dem entsprechenden
+setting ist.
+
+Die Datei 'settings_data.json' im selben Verzeichnis enthält die Voreinstellungen
+mit Standardwerten, wenn der Endnutzer keine eigenen Einstellungen vorgenommen hat.
+Es ist auch möglich, mehrere s.g. 'Presets' zu erstellen, aus denen der Benutzer
+dann auswählen kann.
+
+-->
+
+<style>
+	label {
+		display: block;
+		font-weight: bold;
+	}
+
+	.field {
+		margin-bottom: 1.2em;
+	}
+</style>
+
+<div class="field">
+	<label for="navbar_style">Navigation Style</label>
+	<select name="navbar_style" size="1" id="navbar_style">
+		<option value="default">Standard</option>
+		<option value="inverse">Invertiert</option>
+	</select>
+</div>
+
+<div class="field">
+	<label for="footer_text">Fußbereich Text</label>
+	<input type="text" name="footer_text" id="footer_text">
+</div>

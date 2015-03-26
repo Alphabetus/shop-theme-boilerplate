@@ -1,0 +1,34 @@
+{% comment %}
+Partial: pagination.html
+===================
+
+Dieses Partial stellt die Seitenzahlen und die Buttons zum vor- und zurückgehen dar.
+{% endcomment %}
+
+{% if paginate.pages > 1 %}
+  <ul class="pagination pagination-lg vc-pagination">
+
+    {% if paginate.previous %}
+      <li>
+        {{ '«' | link_to: paginate.previous.url }}
+      </li>
+    {% endif %}
+
+    {% for part in paginate.parts %}
+      <li>
+        {% if part.is_link %}
+          {{ part.title | link_to: part.url }}
+        {% else %}
+          <span>{{ part.title }}</span>
+        {% endif %}
+      </li>
+    {% endfor %}
+
+    {% if paginate.next %}
+      <li>
+        {{ '»' | link_to: paginate.next.url }}
+      </li>
+    {% endif %}
+
+  </ul>
+{% endif %}

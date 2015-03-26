@@ -1,0 +1,274 @@
+{% comment %}
+Template: cart.html
+===================
+
+Dieses Template stellt den Warenkorb dar.
+
+Folgende Inhalte sollten vorhanden sein:
+
+* Produkte im Warenkorb
+* Zwischensumme
+* Versandgebühren
+* Mehrwertsteuer/Umsatzsteuer
+* Menge der Position
+* Position löschen (als Button)
+* Eingabefeld für Gutscheincodes
+* Feld für Bemerkungen zur Bestellung
+* "Weiter einkaufen"-Link um zur zuletzt besuchten Seite zurückzukommen
+* "Jetzt bezahlen"-Button
+{% endcomment %}
+
+<!-- Cart -->
+<section class="cart container">
+  <h1>Warenkorb</h1>
+  
+  {% if cart.item_count > 0 %}
+    <form class="vc-cart-form" action="/cart" method="post" name="cartform" id="cartform">
+
+      <table class="table">
+        <colgroup>
+          <col>
+          <col width="10%">
+          <col width="10%">
+          <col width="10%">
+        </colgroup>
+        <thead>
+          <tr>
+            <th>Produkt</th>
+            <th></th>
+            <th>Menge</th>
+            <th>Einzelpreis</th>
+            <th>Preis</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in cart.items %}
+            <tr>
+              <td>{{ item.title | link_to: item.product.url }}</td>
+              <td>
+                <a class="btn" href="#" onclick="remove_item({{ item.variant.id }}); return false;" title="Aus dem Warenkorb entfernen">Entfernen</a>
+              </td>
+              <td>
+                <input type="text" id="updates_{{ item.variant.id }}" size="4" name="updates[]" value="{{ item.quantity }}">
+              </td>
+              <td>{{ item.price | money }}</td>
+              <td>{{ item.line_price | money }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+        <tfoot>    
+          <tr>
+            <td colspan="2" rowspan="4"></td>       
+            <td colspan="2" class="vc-right-aligned"><strong>Zwischensumme:</strong></td>
+            <td class="vc-right-aligned"><span class="vc-price vc-subtotal-price">{{ cart.subtotal_price | money | replace: ' ', '&nbsp;' }}</span></td>
+          </tr>
+          <tr>
+            <td colspan="2" class="vc-right-aligned"><strong>Versandkosten:</strong></td>
+            <td class="vc-right-aligned">
+              <span class="vc-price vc-shipping-cost">{{ cart.shipping_cost | money | replace: ' ', '&nbsp;' }}</span>
+            </td>
+          </tr>
+          {% if cart.discount > 0 %}
+          <tr>
+            <td colspan="2" class="vc-right-aligned"><strong>Gutschein</strong> (Coupon):</td>
+            <td class="vc-right-aligned">
+              <span class="vc-price vc-discount">-{{ cart.discount | money | replace: ' ', '&nbsp;' }}</span>
+            </td>
+          </tr>
+          {% endif %}
+          <tr>
+            <td colspan="2" class="vc-right-aligned"><strong>Gesamtpreis:</strong></td>
+            <td class="vc-right-aligned">
+              <span class="vc-price vc-total-price"><strong>{{ cart.total_price | money | replace: ' ', '&nbsp;' }}</strong></span>
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <div class="row spacing">
+        <div class="btn-toolbar">
+          <div class="pull-right">
+            <input type="submit" class="btn btn-primary" value="Aktualisieren">
+            <a class="btn btn-primary" href="/checkout">Diese Artikel bestellen</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="row spacing">
+        <!-- START Shipping -->
+        <div class="vc-column-shipping col-md-4">
+          <h4>Versand</h4>
+          
+          {% if cart.shipping_type == blank and cart.extra_shipping_types.first == blank %}
+            <p class="vc-shipping-type">Für Ihre Artikel konnte keine geeignete Versandart vorausgewählt werden. Bitte nehmen Sie Kontakt mit uns auf.</p>
+          {% else %}
+            <div>
+              <label class="vc-destination-country" for="destination_country">
+                Bestimmungsland:
+              </label>
+              <div class="col-md-10 remove-padding">
+                <select class="vc-destination-country form-control" name="destination_country" id="destination_country" onchange="document.forms['cartform'].submit();">
+                  {% for country_option in cart.delivery_countries %}
+                  <option {% if cart.destination_country == country_option %}selected="selected"{% endif %} value="{{ country_option }}">
+                  {% case country_option %}
+                    {% when 'de' %}Deutschland
+                    {% when 'us' %}Amerika
+                    {% when 'be' %}Belgien
+                    {% when 'ba' %}Bosnien und Herzegowina
+                    {% when 'bg' %}Bulgarien
+                    {% when 'cn' %}China
+                    {% when 'dk' %}Dänemark
+                    {% when 'en' %}England
+                    {% when 'ee' %}Estland
+                    {% when 'fi' %}Finnland
+                    {% when 'fr' %}Frankreich
+                    {% when 'gr' %}Griechenland
+                    {% when 'gb' %}Großbritannien
+                    {% when 'hk' %}Hongkong
+                    {% when 'ie' %}Irland
+                    {% when 'is' %}Island
+                    {% when 'il' %}Israel
+                    {% when 'it' %}Italien
+                    {% when 'jp' %}Japan
+                    {% when 'ca' %}Kanada
+                    {% when 'kp' %}Korea (Nord)
+                    {% when 'kr' %}Korea (Süd)
+                    {% when 'lv' %}Lettland
+                    {% when 'li' %}Liechtenstein
+                    {% when 'lt' %}Litauen
+                    {% when 'lu' %}Luxemburg
+                    {% when 'mt' %}Malta
+                    {% when 'mk' %}Mazedonien
+                    {% when 'mc' %}Monaco
+                    {% when 'nl' %}Niederlande
+                    {% when 'no' %}Norwegen
+                    {% when 'at' %}Österreich
+                    {% when 'pl' %}Polen
+                    {% when 'pt' %}Portugal
+                    {% when 'ro' %}Rumänien
+                    {% when 'sa' %}Saudi-Arabien
+                    {% when 'se' %}Schweden
+                    {% when 'ch' %}Schweiz
+                    {% when 'cs' %}Serbien und Montenegro
+                    {% when 'sg' %}Singapur
+                    {% when 'sk' %}Slowakei
+                    {% when 'si' %}Slowenien
+                    {% when 'es' %}Spanien
+                    {% when 'cz' %}Tschechische Republik
+                    {% when 'tr' %}Türkei
+                    {% when 'ua' %}Ukraine
+                    {% when 'hu' %}Ungarn
+                    {% when 'ae' %}Vereinigte Arabische Emirate
+                    {% when 'uk' %}Vereinigtes Königreich
+
+                    {% else %}{{ country_option | upcase }}
+                  {% endcase %}
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+            </div>
+            <div>
+              <label class="vc-shipping-type" for="standard_shipping_type"><strong>Versandart:</strong></label>
+              {% if cart.standard_shipping_types.size > 1 %}
+                <select class="vc-shipping-type col-md-12 form-control" name="standard_shipping_type" id="standard_shipping_type" onchange="document.getElementById('cartform').submit();">
+                  {% for shipping_type in cart.standard_shipping_types %}
+                  <option value="{{ shipping_type.id }}"{% if cart.shipping_type.id == shipping_type.id %} selected='selected'{% endif %}>{{ shipping_type }}</option>
+                  {% endfor %}
+                </select>
+              {% else %}
+                <p class="vc-shipping-type">{{ cart.shipping_type | ensure: cart.extra_shipping_types.first }}</p>
+              {% endif %}
+            </div>
+            <label class="vc-estimated-delivery">Voraussichtlicher Liefertermin:</label>
+            <p class="vc-estimated-delivery">{{ cart.estimated_delivery | date: "%d.%m.%Y %H:%M Uhr" }}</p>
+          {% endif %}
+        </div>
+        <!-- END Shipping -->
+
+        <!-- START Coupon -->
+        <div class="vc-column-coupon col-md-4">
+          <h4>Gutschein</h4>
+          <label for="coupon_code"><strong>Gutscheincode:</strong></label>
+          <div class="input-group col-md-10">
+            <input class="form-control" id="coupon_code" type="text" size="12" name="coupon_code" value="{{ cart.coupon.code }}" onfocus="this.select();"/>
+
+            <span class="input-group-btn">
+              <a class="btn btn-default" href="#" onclick="document.getElementById('cartform').submit();" title="Coupon einlösen">Prüfen</a>
+            </span>
+          </div>
+
+          <br />
+          
+          {% if cart.coupon.code != blank %}
+            {% if cart.coupon.valid? %}
+              <div class="alert alert-success">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <p>
+                  <strong>Gutschein Hinweis</strong>
+                </p>
+                <p>
+                  {% unless cart.coupon.description == blank %}
+                    {{ cart.coupon.description }}
+                  {% else %}
+                    Ihr Gutschein wurde akzeptiert.
+                  {% endunless %}
+                </p>
+              </div>
+            {% else %}
+              <div class="alert alert-danger">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <p>
+                  <strong>Gutschein Hinweis</strong>
+                </p>
+                <p>
+                  {% for error in cart.coupon.errors %}
+                    <li>{{ error }}</li>
+                  {% endfor %}
+                </p>
+              </div>
+            {% endif %}
+          {% endif %}
+        </div>
+        <!-- END Coupon -->              
+
+        <!-- START Note -->
+        <div class="vc-column-note col-md-4">
+
+          <h4>Nachricht an uns</h4>
+          <label class="vc-customer-note" for="note">Fügen Sie dieser Bestellung eine Nachricht bei:</label>
+          <div class="input col-md-10 remove-padding">
+            <textarea class="vc-customer-note form-control" id="note" name="note" rows="4">{{ cart.note }}</textarea>
+            <br />
+            <button type="submit" class="btn">Nachricht anhängen</button>
+          </div>
+        </div>
+        <!-- END Note -->
+      </div>
+    </form>
+
+  {% else %}
+
+    <div class="alert alert-info">
+      <p>Der Warenkorb ist leer</p>
+    </div>
+
+  {% endif %}
+
+  <hr>
+  
+  <div class="row spacing">
+    <a class="btn btn-default" href="{{ lists.visited.last_object_url }}">&larr; Weiter einkaufen</a>
+  </div>
+
+</section>
+<!-- End: Cart -->
+
+<script>
+// Positionen entfernen indem die Quantity auf 0 gesetzt wird.
+function remove_item(id) {
+    document.getElementById('updates_'+id).value = 0;
+    document.getElementById('cartform').submit();
+}
+</script>
+

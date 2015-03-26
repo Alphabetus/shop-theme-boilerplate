@@ -1,0 +1,61 @@
+{% comment %}
+Template: blog.html
+===================
+
+Dieses Template gibt eine Übersicht über alle Blogartikel.
+{% endcomment %}
+
+<!-- Blog -->
+<section class="blog blog-{{ blog.handle }}">
+
+  <div class="page-header">
+    <h1>{{ blog.title }}</h1>
+  </div>
+
+  {% paginate blog.articles by 10 %}
+
+    <div class="blog-articles">
+      {% for article in blog.articles %}
+
+        <!-- Blog Article -->
+        <article class="blog-article">
+          <h2 class="blog-article-title">
+            {{ article.title | link_to: article.url }}
+          </h2>
+
+          <p class="blog-article-content">
+            {{ article.content | strip_html | strip_newlines | truncatewords: 60 }}
+            <a href="{{ article.url }}" class="blog-article-more">Mehr lesen</a>
+          </p>
+
+          <p class="blog-article-meta text-muted">
+            <time datetime="{{ article.created_at | date: '%FT%T%:z' }}" pubdate>
+              Geschrieben am {{ article.created_at | date: '%-d. %B %Y' }}
+            </time>
+          </p>
+        </article>
+        <!-- End: Blog Article -->
+
+      {% endfor %}
+    </div>
+
+    {% if paginate.pages > 1 %}
+      <ul class="pager">
+        {% if paginate.previous %}
+          <li class="previous">
+            <a href="{{ paginate.previous.url }}">&larr; Neuere Artikel</a>
+          </li>
+        {% endif %}
+
+        {% if paginate.next %}
+          <li class="next">
+            <a href="{{ paginate.next.url }}">Ältere Artikel &rarr;</a>
+          </li>
+        {% endif %}
+      </ul>
+    {% endif %}
+
+  {% endpaginate %}
+
+</section>
+<!-- End: Blog -->
